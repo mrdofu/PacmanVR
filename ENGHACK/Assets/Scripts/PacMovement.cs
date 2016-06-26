@@ -15,10 +15,18 @@ public class PacMovement : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        vel[0] = gameObject.transform.forward.x * speed;
+        vel[0] = (gameObject.transform.forward.z) * speed;
         vel[1] = gameObject.transform.forward.y * speed;
-        vel[2] = gameObject.transform.forward.z * speed;
+        vel[2] = (gameObject.transform.forward.x) * speed;
 
         rb.velocity = new Vector3(vel[0], vel[1], vel[2]);
+    }
+
+    void OnCollisionEnter (Collision col)
+    {
+        if (col.gameObject.name.Equals("map"))
+        {
+            gameObject.transform.Rotate(Vector3.right);
+        }
     }
 }
