@@ -9,14 +9,13 @@ public class GhostManager : MonoBehaviour
 
     void Start()
     {
-        // Call the Spawn function after a delay of the spawnTime and then continue to call after the same amount of time.
+        // Spawn ghosts
         Spawn();
     }
 
-
+    // Create an instance of all ghosts
     void Spawn()
     {
-        // Create an instance of the enemy prefab at the randomly selected spawn point's position and rotation.
         int numSpawnPoints = spawnPoints.Length;
         for (int i = 0; i < numSpawnPoints; i++)
         {
