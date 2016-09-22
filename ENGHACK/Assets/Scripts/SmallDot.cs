@@ -12,8 +12,18 @@ public class SmallDot : MonoBehaviour {
         if (other.gameObject == pacmanGameObj)
         {
             // TODO: award points
-            // TODO: check for remaining dots
             Destroy(this.gameObject);
+            // TODO: check for remaining dots
+            Transform gameManager = transform.parent;
+            if (gameManager == null) {
+                return;
+            }
+
+            if (gameManager.childCount == 0)
+            {
+                // game over
+                
+            }
         }
     }
 
