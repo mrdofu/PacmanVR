@@ -16,6 +16,7 @@ public class SmallDot : MonoBehaviour {
             // TODO: check for remaining dots
             Transform gameManager = transform.parent;
             if (gameManager == null) {
+                Debug.Log("Dot is not a child of GameManager");
                 return;
             }
 

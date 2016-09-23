@@ -10,11 +10,11 @@ public class GhostManager : MonoBehaviour
     void Start()
     {
         // Spawn ghosts
-        Spawn();
+        SpawnGhosts();
     }
 
     // Create an instance of all ghosts
-    void Spawn()
+    void SpawnGhosts()
     {
         int numSpawnPoints = spawnPoints.Length;
         for (int i = 0; i < numSpawnPoints; i++)
