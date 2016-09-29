@@ -15,7 +15,9 @@ public class Ghost : MonoBehaviour
         {
             if (isVulnerable)
             {
-                // ghost respawns invulnerable
+                // ghost respawns 
+                // cancel the timer
+                // ghost becomes invulnerable
                 // pacman is awarded points
             }
             else
@@ -26,4 +28,8 @@ public class Ghost : MonoBehaviour
         }
     }
 
+    /* 
+     * When a ghost goes vulnerable, a timer starts. If the ghost is vulnerable by the end of the timer,
+     * he no longer will be
+     */
 }
