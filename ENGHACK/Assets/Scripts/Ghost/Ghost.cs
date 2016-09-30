@@ -23,6 +23,8 @@ public class Ghost : MonoBehaviour
             else
             {
                 // pacman loses a life
+                Pacman pacmanScript = col.gameObject.GetComponent<Pacman>();
+                pacmanScript.numLives -= 1;
                 // everybody respawns
             }
         }
