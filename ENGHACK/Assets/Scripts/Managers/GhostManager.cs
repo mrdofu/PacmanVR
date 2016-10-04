@@ -49,7 +49,7 @@ public class GhostManager : MonoBehaviour
         foreach (GameObject ghostObject in ghostObjects)
         {
             Ghost ghost = ghostObject.GetComponent<Ghost>();
-            ghost.isVulnerable = true;
+            ghost.setVulnerable();
         }
     }
 }
