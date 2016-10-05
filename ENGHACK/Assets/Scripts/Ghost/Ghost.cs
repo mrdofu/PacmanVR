@@ -4,9 +4,21 @@ public class Ghost : MonoBehaviour
 {
     public bool isVulnerable { get; set; }
 
+    public float maxVulnerableTime = 10f;      // maximum time a ghost can be vulnerable for
+    private float vulnerableTimer;              // timer to count how long a ghost has been vulnerable for
+
     void Start()
     {
         isVulnerable = false;
+    }
+
+    void Update()
+    {
+        // if a ghost becomes vulnerable, start counting
+        if (isVulnerable)
+        {
+
+        }
     }
 
     void OnCollisionEnter(Collision col)
@@ -33,13 +45,11 @@ public class Ghost : MonoBehaviour
         }
     }
 
-    /* 
-     * When a ghost goes vulnerable, a timer starts. If the ghost is vulnerable by the end of the timer,
-     * he no longer will be
+    /**
+     * Ghosts become vulnerable to be eaten by pacman
      */
      public void setVulnerable()
     {
         isVulnerable = true;
-
     }
 }

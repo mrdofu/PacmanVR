@@ -12,11 +12,22 @@ public class BigDot : MonoBehaviour
         GameObject pacmanGameObj = GameObject.FindGameObjectWithTag("Pacman");
         if (other.gameObject == pacmanGameObj)
         {
-            Destroy(this.gameObject);
-            // TODO: ghosts vulnerable
-            GameObject.Find("GhostManager").GetComponent<GhostManager>().SetGhostsVulnerable();
             // TODO: award points
+            Destroy(this.gameObject);
+            GameObject.Find("GhostManager").GetComponent<GhostManager>().SetGhostsVulnerable();
             // TODO: check for remaining dots
+            Transform gameManager = transform.parent;
+            if (gameManager == null)
+            {
+                Debug.Log("Dot is not a child of GameManager");
+                return;
+            }
+
+            if (gameManager.childCount == 0)
+            {
+                // game over
+
+            }
         }
     }
 
