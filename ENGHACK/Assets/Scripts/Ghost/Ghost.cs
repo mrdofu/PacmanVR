@@ -32,6 +32,7 @@ public class Ghost : MonoBehaviour
                 transform.position = GameObject.Find("ghostSpawn2").transform.position;
                 // cancel the timer
                 // ghost becomes invulnerable
+                isVulnerable = false;
                 // pacman is awarded points
             }
             else
@@ -40,7 +41,15 @@ public class Ghost : MonoBehaviour
                 Pacman pacmanScript = col.gameObject.GetComponent<Pacman>();
                 pacmanScript.numLives -= 1;
                 // if he still has lives, everybody respawns
-                // else, game over
+                if (pacmanScript.numLives > 0)
+                {
+
+                }
+                // else, gosts win
+                else
+                {
+                    GameObject.Find("GameManager").GetComponent<GameManager>().GameOver(GameManager.WINNER_GHOST);
+                }
             }
         }
     }

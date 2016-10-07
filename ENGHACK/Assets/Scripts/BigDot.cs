@@ -14,6 +14,7 @@ public class BigDot : MonoBehaviour
         {
             // TODO: award points
             Destroy(this.gameObject);
+
             GameObject.Find("GhostManager").GetComponent<GhostManager>().SetGhostsVulnerable();
             // TODO: check for remaining dots
             Transform gameManager = transform.parent;
@@ -22,12 +23,14 @@ public class BigDot : MonoBehaviour
                 Debug.Log("Dot is not a child of GameManager");
                 return;
             }
-
-            if (gameManager.childCount == 0)
+            else
             {
-                // game over
-
+                if (gameManager.childCount <= 0)
+                {
+                    gameManager.GetComponent<GameManager>().GameOver(GameManager.WINNER_PACMAN);
+                }
             }
+
         }
     }
 

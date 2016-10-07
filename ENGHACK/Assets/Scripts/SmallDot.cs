@@ -19,11 +19,12 @@ public class SmallDot : MonoBehaviour {
                 Debug.Log("Dot is not a child of GameManager");
                 return;
             }
-
-            if (gameManager.childCount == 0)
+            else
             {
-                // game over
-                
+                if (gameManager.childCount <= 0)
+                {
+                    gameManager.GetComponent<GameManager>().GameOver(GameManager.WINNER_PACMAN);
+                }
             }
         }
     }
