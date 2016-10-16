@@ -4,8 +4,8 @@ public class Ghost : MonoBehaviour
 {
     public bool isVulnerable { get; set; }
 
-    public float maxVulnerableTime = 10f;      // maximum time a ghost can be vulnerable for
-    private float vulnerableTimer;              // timer to count how long a ghost has been vulnerable for
+    public const float MAX_VULNERABLE_TIME = 10f;      // maximum time a ghost can be vulnerable for
+    private float vulnerableTimer = 0f;              // timer to count how long a ghost has been vulnerable for
 
     void Start()
     {
@@ -14,11 +14,7 @@ public class Ghost : MonoBehaviour
 
     void Update()
     {
-        // if a ghost becomes vulnerable, start counting
-        if (isVulnerable)
-        {
-
-        }
+        checkVulnerableTimer();
     }
 
     void OnCollisionEnter(Collision col)
@@ -60,5 +56,19 @@ public class Ghost : MonoBehaviour
      public void setVulnerable()
     {
         isVulnerable = true;
+    }
+
+    private void checkVulnerableTimer()
+    {
+        // if a ghost becomes vulnerable, start counting
+        if (isVulnerable)
+        {
+            vulnerableTimer += Time.deltaTime;
+            if (vulnerableTimer >= MAX_VULNERABLE_TIME)
+            {
+                isVulnerable = false;
+                vulnerableTimer = 0f;
+            }
+        }
     }
 }
