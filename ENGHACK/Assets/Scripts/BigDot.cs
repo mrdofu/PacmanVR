@@ -30,7 +30,6 @@ public class BigDot : MonoBehaviour
                     gameManager.GetComponent<GameManager>().GameOver(GameManager.WINNER_PACMAN);
                 }
             }
-
         }
     }
 
