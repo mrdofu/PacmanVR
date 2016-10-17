@@ -7,9 +7,12 @@ public class Ghost : MonoBehaviour
     public const float MAX_VULNERABLE_TIME = 10f;      // maximum time a ghost can be vulnerable for
     private float vulnerableTimer = 0f;              // timer to count how long a ghost has been vulnerable for
 
+    private GameManager gameManager;
+
     void Start()
     {
         isVulnerable = false;
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     void Update()
@@ -39,12 +42,12 @@ public class Ghost : MonoBehaviour
                 // if he still has lives, everybody respawns
                 if (pacmanScript.numLives > 0)
                 {
-
+                    gameManager.RespawnAll();
                 }
                 // else, gosts win
                 else
                 {
-                    GameObject.Find("GameManager").GetComponent<GameManager>().GameOver(GameManager.WINNER_GHOST);
+                    gameManager.GameOver(GameManager.WINNER_GHOST);
                 }
             }
         }

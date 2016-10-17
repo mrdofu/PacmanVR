@@ -52,4 +52,14 @@ public class GhostManager : MonoBehaviour
             ghost.setVulnerable();
         }
     }
+
+    /**
+     * Respawns all ghosts from spawnpoints
+     */
+    public void RespawnGhosts() {
+        for (int i = 0; i < ghostObjects.Length; i++)
+        {
+            ghostObjects[i].transform.position = spawnPoints[i].transform.position;
+        }
+    }
 }
