@@ -7,7 +7,6 @@ public class GameManager : MonoBehaviour
     public const int WINNER_GHOST = 1;      // if pacman loses all lives or time runs out
 
     public GameObject ghostManager;
-    public GameObject hud;
     public GameObject pacmanObj;
     public GameObject pacSpawn;
 
@@ -37,14 +36,18 @@ public class GameManager : MonoBehaviour
     public void GameOver(int winner)
     {
         // Determine winner based on parameter
-        Text gameStatusText = hud.transform.Find("gameStatusText").GetComponent<Text>();
-        if (winner == 0)
+        GameObject[] hudArray = GameObject.FindGameObjectsWithTag("HUD");
+        foreach (var hudObj in hudArray)
         {
-            gameStatusText.text = "PACMAN WINS";
-        }
-        else
-        {
-            gameStatusText.text = "GHOSTS WIN";
+            Text gameStatusText = hudObj.transform.Find("gameStatusText").GetComponent<Text>();
+            if (winner == 0)
+            {
+                gameStatusText.text = "PACMAN WINS";
+            }
+            else
+            {
+                gameStatusText.text = "GHOSTS WIN";
+            }
         }
     }
 }
