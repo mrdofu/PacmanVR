@@ -2,7 +2,6 @@
 
 public class GhostManager : MonoBehaviour
 {
-    public GameObject playerPrefab;
     public GameObject ghostPrefab;                // The enemy prefab to be spawned.
     public Transform[] spawnPoints;         // An array of the spawn points this enemy can spawn from.
 
@@ -25,7 +24,6 @@ public class GhostManager : MonoBehaviour
         {
             Instantiate(ghostPrefab, spawnPoints[i].position, spawnPoints[i].rotation);
         }
-        Instantiate(playerPrefab, spawnPoints[3].position, spawnPoints[3].rotation);
     }
 
     /**
