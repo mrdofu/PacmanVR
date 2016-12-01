@@ -32,7 +32,7 @@ public class LookDownMenu : MonoBehaviour {
     }
 
     void Update() {
-        if (vrHead.rotation.eulerAngles.x > 22)
+        if (vrHead.rotation.eulerAngles.x > 22 && vrHead.rotation.eulerAngles.x < 90)
         {
             targetMenuAlpha = 1;
         } else
