@@ -61,7 +61,16 @@ public class LookDownMenu : MonoBehaviour {
         for (int i = 0; i < lookDownElements.Length; i++)
         {
             LookDownElement el = lookDownElements[i];
-            
+            // TODO: add the check for if el's target (to be implemented) is the reticle's target
+            if (el.target.IsTarget)
+            {
+                el.targetAlpha = 1;
+            }
+            else
+            {
+                el.targetAlpha = 0;
+            }
+
             if (el.currentAlpha != el.targetAlpha || updateAll)
             {
 
@@ -71,18 +80,24 @@ public class LookDownMenu : MonoBehaviour {
                     springSpeed = 0.1f;
                 }
 
+                // gradual change in alpha for the fading effect
                 el.currentAlpha = Smoothing.SpringSmooth(el.currentAlpha, el.targetAlpha, ref el.alphaSpeed, springSpeed, Time.deltaTime);
+                // if current is basically the target alpha, just set it to the target
                 if (Mathf.Abs(el.currentAlpha - el.targetAlpha) < 0.005f)
                 {
                     el.currentAlpha = el.targetAlpha;
                 }
+
+                // text mesh's colour
                 Color c = el.text.color;
                 c.a = el.currentAlpha * currentMenuAlpha;
                 el.text.color = c;
 
+                // scale icon and translate text up
                 el.iconTransform.localScale = el.initialScale + 0.2f * el.currentAlpha * el.initialScale;
                 el.textTransform.localPosition = el.currentAlpha * el.endTextPosition + (1 - el.currentAlpha) * el.initialTextPosition;
             }
+            // makes icon show when you look down
             Color col = el.plane.material.color;
             col.a = currentMenuAlpha;
             el.plane.material.color = col;
@@ -94,9 +109,9 @@ public class LookDownMenu : MonoBehaviour {
 	public class LookDownElement{
 		public TextMesh text;
 		public Transform textTransform;
-        //public GazeTarget target;
         public MeshRenderer plane;
 		public Transform iconTransform;
+        public ScaleTarget target;
 		public float targetAlpha;
 		public float currentAlpha;
 		public float alphaSpeed;
