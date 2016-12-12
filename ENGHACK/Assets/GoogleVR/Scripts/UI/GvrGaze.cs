@@ -19,50 +19,50 @@ using System.Linq;
 /// more complicated path of using _GazeInputModule_ and the rest of **uGUI**.
 [RequireComponent(typeof(Camera))]
 public class GvrGaze : MonoBehaviour {
-  /// The active Gaze Pointer for this camera. Must have IGvrGazePointer.
-  /// The IGvrGazePointer responds to events from this class.
+  /// The active Gaze Pointer for this camera. Must have IGvrPointer.
+  /// The IGvrPointer responds to events from this class.
   public GameObject PointerObject {
     get {
       return pointerObject;
     }
     set {
       if (value != null) {
-        // Retrieve the IGvrGazePointer component.
+        // Retrieve the IGvrPointer component.
         var ptr = value.GetComponents<MonoBehaviour>()
-            .Select(c => c as IGvrGazePointer)
+            .Select(c => c as IGvrPointer)
             .Where(c => c != null)
             .FirstOrDefault();
 
         if (ptr != null) {
           if (pointer != null) {
             if (isTriggered) {
-              pointer.OnGazeTriggerEnd(cam);
+              pointer.OnPointerClickUp();
             }
             if (currentGazeObject != null) {
-              pointer.OnGazeExit(cam, currentGazeObject);
+              pointer.OnPointerExit(currentGazeObject);
             }
-            pointer.OnGazeDisabled();
+            pointer.OnInputModuleDisabled();
           }
           pointerObject = value;
           pointer = ptr;
-          pointer.OnGazeEnabled();
+          pointer.OnInputModuleEnabled();
           if (currentGazeObject != null) {
-            pointer.OnGazeStart(cam, currentGazeObject, lastIntersectPosition,
-                                currentTarget != null);
+            pointer.OnPointerEnter(currentGazeObject, lastIntersectPosition,
+                lastIntersectionRay, currentTarget != null);
           }
           if (isTriggered) {
-            pointer.OnGazeTriggerStart(cam);
+            pointer.OnPointerClickDown();
           }
         } else {
-          Debug.LogError("Object must have component which implements IGvrGazePointer.");
+          Debug.LogError("Object must have component which implements IGvrPointer.");
         }
       } else {
         if (pointer != null) {
           if (isTriggered) {
-            pointer.OnGazeTriggerEnd(cam);
+            pointer.OnPointerClickUp();
           }
           if (currentTarget != null) {
-            pointer.OnGazeExit(cam, currentGazeObject);
+            pointer.OnPointerExit(currentGazeObject);
           }
         }
         pointer = null;
@@ -72,7 +72,7 @@ public class GvrGaze : MonoBehaviour {
   }
   [SerializeField][HideInInspector]
   private GameObject pointerObject;
-  private IGvrGazePointer pointer;
+  private IGvrPointer pointer;
 
   // Convenient accessor to the camera component used throughout this script.
   public Camera cam { get; private set; }
@@ -85,6 +85,7 @@ public class GvrGaze : MonoBehaviour {
   private GameObject currentGazeObject;
 
   private Vector3 lastIntersectPosition;
+  private Ray lastIntersectionRay;
 
   // Trigger state.
   private bool isTriggered;
@@ -96,7 +97,7 @@ public class GvrGaze : MonoBehaviour {
 
   void OnEnable() {
     if (pointer != null) {
-      pointer.OnGazeEnabled();
+      pointer.OnInputModuleEnabled();
     }
   }
 
@@ -109,12 +110,12 @@ public class GvrGaze : MonoBehaviour {
     if (pointer != null) {
       // Is there a pending trigger?
       if (isTriggered) {
-        pointer.OnGazeTriggerEnd(cam);
+        pointer.OnPointerClickUp();
       }
       if (currentGazeObject != null) {
-        pointer.OnGazeExit(cam, currentGazeObject);
+        pointer.OnPointerExit(currentGazeObject);
       }
-      pointer.OnGazeDisabled();
+      pointer.OnInputModuleDisabled();
     }
     currentGazeObject = null;
     currentTarget = null;
@@ -138,16 +139,18 @@ public class GvrGaze : MonoBehaviour {
     // Find what object the user is looking at.
     Vector3 intersectPosition;
     IGvrGazeResponder target = null;
-    GameObject targetObject = FindGazeTarget(innerRadius, out target, out intersectPosition);
+    Ray intersectionRay;
+    GameObject targetObject = FindGazeTarget(innerRadius, out target, out intersectPosition, out intersectionRay);
 
     // Found a target?
     if (targetObject != null) {
       lastIntersectPosition = intersectPosition;
+      lastIntersectionRay = intersectionRay;
 
       // Is the object new?
       if (targetObject != currentGazeObject) {
         if (pointer != null) {
-          pointer.OnGazeExit(cam, currentGazeObject);
+          pointer.OnPointerExit(currentGazeObject);
         }
         if (currentTarget != null) {
           // Replace with current object.
@@ -160,8 +163,8 @@ public class GvrGaze : MonoBehaviour {
 
         // Inform pointer and target of gaze.
         if (pointer != null) {
-          pointer.OnGazeStart(cam, currentGazeObject, intersectPosition,
-                              currentTarget != null);
+          pointer.OnPointerEnter(currentGazeObject, intersectPosition,
+             intersectionRay, currentTarget != null);
         }
         if (currentTarget != null) {
           currentTarget.OnGazeEnter();
@@ -169,8 +172,8 @@ public class GvrGaze : MonoBehaviour {
       } else {
         // Same object, inform pointer of new intersection.
         if (pointer != null) {
-          pointer.OnGazeStay(cam, currentGazeObject, intersectPosition,
-                             currentTarget != null);
+          pointer.OnPointerHover(currentGazeObject, intersectPosition,
+              intersectionRay, currentTarget != null);
         }
       }
     } else {
@@ -180,12 +183,13 @@ public class GvrGaze : MonoBehaviour {
         if (IsGazeNearObject(outerRadius, currentGazeObject, out intersectPosition)) {
           // Still gazing.
           if (pointer != null) {
-            pointer.OnGazeStay(cam, currentGazeObject, intersectPosition, currentTarget != null);
+            pointer.OnPointerHover(currentGazeObject, intersectPosition,
+               intersectionRay, currentTarget != null);
           }
         } else {
           // No longer gazing any object.
           if (pointer != null) {
-            pointer.OnGazeExit(cam, currentGazeObject);
+            pointer.OnPointerExit(currentGazeObject);
           }
           if (currentTarget != null) {
             currentTarget.OnGazeExit();
@@ -198,20 +202,20 @@ public class GvrGaze : MonoBehaviour {
   }
 
   private GameObject FindGazeTarget(float radius, out IGvrGazeResponder responder,
-      out Vector3 intersectPosition) {
+    out Vector3 intersectPosition, out Ray intersectionRay) {
     RaycastHit hit;
     GameObject targetObject = null;
     bool hitResult = false;
+    intersectionRay = GetRay();
 
     // Use Raycast or SphereCast?
     if (radius > 0.0f) {
       // Cast a sphere against the scene.
-      hitResult = Physics.SphereCast(transform.position,
-          radius, transform.forward, out hit, cam.farClipPlane, mask);
+      hitResult = Physics.SphereCast(intersectionRay.origin,
+        radius, intersectionRay.direction, out hit, cam.farClipPlane, mask);
     } else {
       // Cast a Ray against the scene.
-      Ray ray = new Ray(transform.position, transform.forward);
-      hitResult = Physics.Raycast(ray, out hit, cam.farClipPlane, mask);
+      hitResult = Physics.Raycast(intersectionRay, out hit, cam.farClipPlane, mask);
     }
 
     // Found anything?
@@ -273,18 +277,22 @@ public class GvrGaze : MonoBehaviour {
         // Trigger started.
         isTriggered = true;
         if (pointer != null) {
-          pointer.OnGazeTriggerStart(cam);
+          pointer.OnPointerClickDown();
         }
       }
     } else if (!GvrViewer.Instance.Triggered && !Input.GetMouseButton(0)) {
       // Trigger ended.
       if (pointer != null) {
-        pointer.OnGazeTriggerEnd(cam);
+        pointer.OnPointerClickUp();
       }
       if (currentTarget != null) {
         currentTarget.OnGazeTrigger();
       }
       isTriggered = false;
     }
+  }
+
+  private Ray GetRay() {
+    return new Ray(transform.position, transform.forward);
   }
 }

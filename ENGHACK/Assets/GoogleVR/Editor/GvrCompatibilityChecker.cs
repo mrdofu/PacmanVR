@@ -1,4 +1,18 @@
-﻿using UnityEngine;
+﻿// Copyright 2016 Google Inc. All rights reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+using UnityEngine;
 using UnityEditor;
 
 using System.Collections.Generic;
@@ -9,9 +23,9 @@ using System.Linq;
 #pragma warning disable 414
 
 /// <summary>
-/// Updates Unity 5.2 and 5.3 with additional GVR library imports if those files do not exist.
-/// Otherwise, if this is Unity 5.4 and there are legacy libraries or AndroidManifest.xml,
-/// they are removed.
+/// Updates non-native versions of Unity with additional GVR library imports if those files
+/// do not exist. Otherwise, if this is Unity 5.4 and there are legacy libraries or
+/// AndroidManifest.xml, they are removed.
 /// </summary>
 [InitializeOnLoad]
 public class GvrCompatibilityChecker {
@@ -31,7 +45,7 @@ public class GvrCompatibilityChecker {
 
   // GVR backwards-compatible package.
   private static string BACK_COMPAT_PACKAGE_PATH =
-    "/GoogleVR/gvr-5.2-and-5.3-compatible.unitypackage";
+    "/GoogleVR/GVRBackwardsCompatibility.unitypackage";
 
   // Path elements.
   private static string ASSET_PATH_PREFIX = "Assets";
@@ -45,7 +59,7 @@ public class GvrCompatibilityChecker {
   private static string IMPORT_REQUIRED_TITLE = "Package Import Required";
   private static string IMPORT_REQUIRED_MESSAGE =
     "Additional libraries must be imported for GVR to be compatible with " +
-    "this version of Unity. Please upgrade to Unity 5.4 at your earliest convenience.";
+    "this version of Unity, which does not have the GVR native integration.";
   private static string MANIFEST_UPDATE_WARNING_TITLE = "AndroidManifest.xml Merge Required";
   private static string MERGE_MANIFEST_WARNING_MESSAGE =
     "Please merge the existing AndroidManifest.xml with AndroidManifest-Cardboard.xml.";
