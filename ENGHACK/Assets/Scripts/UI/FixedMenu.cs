@@ -24,7 +24,7 @@ public class FixedMenu : MonoBehaviour {
 	}
 
 	void Start(){
-        vrHead = GameObject.Find("GvrMain").transform.Find("Head");
+        vrHead = GameObject.Find("Player").transform.Find("Head");
         previousYaw = vrHead.rotation.eulerAngles.y;
 	}
 

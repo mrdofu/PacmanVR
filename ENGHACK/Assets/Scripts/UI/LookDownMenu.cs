@@ -14,7 +14,7 @@ public class LookDownMenu : MonoBehaviour {
 
 	void Start() {
         menu = GetComponent<FixedMenu>();
-        vrHead = GameObject.Find("GvrMain").transform.Find("Head");
+        vrHead = GameObject.Find("Player").transform.Find("Head");
 
         for (int i = 0; i < lookDownElements.Length; i++)
         {
