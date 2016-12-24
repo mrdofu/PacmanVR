@@ -2,8 +2,8 @@
 using System.Collections;
 
 public class PlayerMovement : MonoBehaviour {
-    public float velocity = 1f;
-    private float oldVelocity;
+    private static float MOVE_SPEED = 1f;
+    public float currentSpeed;
     public GameObject mainCam;
     private Rigidbody rb;
     private float[] vel = new float[3]; //[0] = x, [1] = y, [2] = z
@@ -12,7 +12,7 @@ public class PlayerMovement : MonoBehaviour {
 	void Start ()
     {
         rb = gameObject.GetComponent<Rigidbody>();
-        oldVelocity = velocity;
+        currentSpeed = 0;
 	}
 
     
@@ -28,16 +28,16 @@ public class PlayerMovement : MonoBehaviour {
     {
         if (requestStop())
         {
-            velocity = 0;
+            currentSpeed = 0;
         }
         else
         {
-            velocity = oldVelocity;
+            currentSpeed = MOVE_SPEED;
         }
 
-        vel[0] = mainCam.transform.forward.x * velocity;
-        vel[1] = mainCam.transform.forward.y * velocity;
-        vel[2] = mainCam.transform.forward.z * velocity;
+        vel[0] = mainCam.transform.forward.x * currentSpeed;
+        vel[1] = mainCam.transform.forward.y * currentSpeed;
+        vel[2] = mainCam.transform.forward.z * currentSpeed;
         
 
         rb.velocity = new Vector3(vel[0], vel[1], vel[2]);
