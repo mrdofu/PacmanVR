@@ -7,12 +7,16 @@ public class PlayerMovement : MonoBehaviour {
     public GameObject mainCam;
     private Rigidbody rb;
     private float[] vel = new float[3]; //[0] = x, [1] = y, [2] = z
+
+    private GameManager gameManager;
     
 	// Use this for initialization
 	void Start ()
     {
         rb = gameObject.GetComponent<Rigidbody>();
         currentSpeed = 0;
+
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 	}
 
     
@@ -20,13 +24,12 @@ public class PlayerMovement : MonoBehaviour {
     {
         //Press and hold to request stop
         return Input.touchCount != 0;
-        
     }
 
 	// Update is called once per frame
 	void Update ()
     {
-        if (requestStop())
+        if (gameManager.GamePaused || requestStop())
         {
             currentSpeed = 0;
         }
