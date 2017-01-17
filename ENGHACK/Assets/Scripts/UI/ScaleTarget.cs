@@ -20,7 +20,7 @@ public class ScaleTarget : MonoBehaviour {
     Vector3 baseScale;
     Vector3 targetScale;
 
-    void Start () {
+    protected virtual void Start () {
         IsTarget = false;
 
         if (scaleTargetTransform != null)

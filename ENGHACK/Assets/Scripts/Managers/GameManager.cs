@@ -1,18 +1,36 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public const int WINNER_PACMAN = 0;     // if pacman eats all dots before time runs out
     public const int WINNER_GHOST = 1;      // if pacman loses all lives or time runs out
-
+    
     public GameObject ghostManager;
     public GameObject pacmanObj;
     public GameObject pacSpawn;
 
+    // event for game pausing/ playing
+    public delegate void GameStateChangeAction(bool isPaused);
+    public static event GameStateChangeAction OnGameStateChanged;
+
+    private bool gamePaused;
+    public bool GamePaused {
+        get { return gamePaused; }
+        set {
+            gamePaused = value;
+            if (OnGameStateChanged != null)
+            {
+                OnGameStateChanged(value);
+            }
+        }
+    }
+
     // all children of GameManager gameobject are dots
     void Start()
     {
+        GamePaused = true;
     }
 
     void Update()
