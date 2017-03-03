@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using VRStandardAssets.Utils;
 
 public class PlayScaleTarget : ScaleTarget {
+    [SerializeField]
+    private SelectionRadial selectionRad;
+
     private GameManager gameManager;
     
     protected override void Start()
@@ -10,7 +14,17 @@ public class PlayScaleTarget : ScaleTarget {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
-	public void onPointerDown()
+	void OnEnable()
+    {
+        selectionRad.OnSelectionComplete += UnPause;
+    }
+
+    void OnDisable()
+    {
+        selectionRad.OnSelectionComplete -= UnPause;
+    }
+
+    void UnPause()
     {
         gameManager.GamePaused = false;
     }
