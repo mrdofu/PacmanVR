@@ -17,6 +17,7 @@ public class PlayScaleTarget : ScaleTarget {
 	void OnEnable()
     {
         selectionRad.OnSelectionComplete += UnPause;
+        selectionRad.OnSelectionComplete += Disable;
     }
 
     void OnDisable()
@@ -24,8 +25,20 @@ public class PlayScaleTarget : ScaleTarget {
         selectionRad.OnSelectionComplete -= UnPause;
     }
 
+    /**
+     * unpauses gameManager
+     */
     void UnPause()
     {
         gameManager.GamePaused = false;
+    }
+
+    /**
+     * deactivates startUI game object and fades it away
+     */
+    void Disable()
+    {
+        // TODO: dissolve animation for StartUI
+        gameObject.transform.parent.gameObject.SetActive(false);
     }
 }
