@@ -44,15 +44,4 @@ public class Pacman : MonoBehaviour {
 
         rb.velocity = new Vector3(vel[0], vel[1], vel[2]);
     }
-
-    /**
-     * Rough AI
-     */
-    void OnCollisionEnter (Collision col)
-    {
-        if (col.gameObject.name.Equals("map"))
-        {
-            gameObject.transform.Rotate(Vector3.right);
-        }
-    }
 }
