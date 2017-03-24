@@ -30,6 +30,9 @@ public class BigDot : MonoBehaviour
                     gameManager.GetComponent<GameManager>().GameOver(GameManager.WINNER_PACMAN);
                 }
             }
+
+            // make pacman recalculate next destination
+            pacmanGameObj.GetComponent<PacMovement>().HuntNextDot(gameObject.name);
         }
     }
 

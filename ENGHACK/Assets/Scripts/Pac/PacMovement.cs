@@ -20,8 +20,10 @@ public class PacMovement : MonoBehaviour {
      */
     public void HuntNextDot(string eaten)
     {
-            goal = findClosestDot(eaten);
-            navAgent.SetDestination(goal.position);
+        goal = findClosestDot(eaten);
+        // more accurate dot finding
+        Vector3 pos = new Vector3(goal.position.x, goal.position.y - 1, goal.position.z);
+        navAgent.SetDestination(pos);
     }
 
     /**

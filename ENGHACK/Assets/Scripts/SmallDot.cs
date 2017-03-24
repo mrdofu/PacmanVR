@@ -24,7 +24,7 @@ public class SmallDot : MonoBehaviour {
                 gameManager.GetComponent<GameManager>().GameOver(GameManager.WINNER_PACMAN);
             }
 
-            // make pacman recalculate next destination. this is here since this dot must be destroyed first
+            // make pacman recalculate next destination
             pacmanGameObj.GetComponent<PacMovement>().HuntNextDot(gameObject.name);
         }
     }
