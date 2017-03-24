@@ -19,13 +19,13 @@ public class SmallDot : MonoBehaviour {
                 Debug.Log("Dot is not a child of GameManager");
                 return;
             }
-            else
+            else if (gameManager.childCount <= 0)
             {
-                if (gameManager.childCount <= 0)
-                {
-                    gameManager.GetComponent<GameManager>().GameOver(GameManager.WINNER_PACMAN);
-                }
+                gameManager.GetComponent<GameManager>().GameOver(GameManager.WINNER_PACMAN);
             }
+
+            // make pacman recalculate next destination. this is here since this dot must be destroyed first
+            pacmanGameObj.GetComponent<PacMovement>().HuntNextDot(gameObject.name);
         }
     }
 }
