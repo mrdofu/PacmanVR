@@ -1,30 +1,34 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class Grid : MonoBehaviour
 {
+    [SerializeField]
+    LayerMask defaultMask;
     [SerializeField]
     LayerMask unwalkableMask;
     [SerializeField]
     Vector2 gridWorldSize;
 
-    const float NODE_WIDTH = 27.8f / 17;   // must match up with gridWorldSize values in-editor
-    public const float NODE_RADIUS = NODE_WIDTH / 2;
+    const float CELL_WIDTH = 27.8f / 17;   // must match up with gridWorldSize values in-editor
+    public const float CELL_RADIUS = CELL_WIDTH / 2;
+    const float FORGIVENESS_TERM = 0.1f;
 
-    Node[,] grid;
+    public Cell[,] grid;
     int gridSizeX, gridSizeY;
     Vector3 correctedMapCenter; 
 
     void Start()
     {
         correctedMapCenter = transform.position;
-        gridSizeX = Mathf.RoundToInt(gridWorldSize.x / NODE_WIDTH);
-        gridSizeY = Mathf.RoundToInt(gridWorldSize.y / NODE_WIDTH);
+        gridSizeX = Mathf.RoundToInt(gridWorldSize.x / CELL_WIDTH);
+        gridSizeY = Mathf.RoundToInt(gridWorldSize.y / CELL_WIDTH);
         CreateGrid();
     }
 
     void CreateGrid()
     {
-        grid = new Node[gridSizeX, gridSizeY];
+        grid = new Cell[gridSizeX, gridSizeY];
         // origin to measure grid cells from
         Vector3 worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x / 2 - Vector3.forward * gridWorldSize.y / 2;
 
@@ -33,17 +37,20 @@ public class Grid : MonoBehaviour
             for (int y = 0; y < gridSizeY; y++)
             {
                 // center of each grid cell in world space
-                Vector3 worldPoint = worldBottomLeft + Vector3.right * (x * NODE_WIDTH + NODE_RADIUS) + Vector3.forward * (y * NODE_WIDTH + NODE_RADIUS);
+                Vector3 worldPoint = worldBottomLeft + Vector3.right * (x * CELL_WIDTH + CELL_RADIUS) + Vector3.forward * (y * CELL_WIDTH + CELL_RADIUS);
                 // smaller check radius to be forgiving on dimensions
-                Vector3 halfExts = new Vector3(NODE_RADIUS - 0.1f, 2, NODE_RADIUS - 0.1f);
+                Vector3 halfExts = new Vector3(CELL_RADIUS - FORGIVENESS_TERM, 2, CELL_RADIUS - FORGIVENESS_TERM);
                 // checkbox is slightly higher than center of cell to collide with higher walls too
                 bool walkable = !(Physics.CheckBox(worldPoint + Vector3.up, halfExts, Quaternion.identity, unwalkableMask));
-                grid[x, y] = new Node(walkable, worldPoint);
+                grid[x, y] = new Cell(walkable, worldPoint, x, y);
             }
         }
     }
 
-    public Node NodeFromWorldPoint(Vector3 worldPosition)
+    /**
+     * returns grid cell given a world position
+     */
+    public Cell CellFromWorldPoint(Vector3 worldPosition)
     {
         float percentX = (worldPosition.x + gridWorldSize.x / 2) / gridWorldSize.x;
         float percentY = (worldPosition.z + gridWorldSize.y / 2) / gridWorldSize.y;
@@ -56,6 +63,43 @@ public class Grid : MonoBehaviour
     }
 
     /**
+     * returns true if the grid cell has a dot in it
+     */
+     public bool CellHasDot(Cell c)
+    {
+        return Physics.CheckSphere(c.worldPosition, CELL_RADIUS - FORGIVENESS_TERM, defaultMask);
+    }
+
+    /**
+     * returns a given cell's neighbours considering edges and unwalkable areas
+     */
+    public List<Cell> GetCellNeighbours(Cell c)
+    {
+        List<Cell> neighbs = new List<Cell>();
+
+        // check for x edges
+        for (int x = -1; x <= 1; x += 2)
+        {
+            int checkX = c.gridX + x;
+            if (checkX >= 0 && checkX < gridSizeX && grid[checkX, c.gridY].walkable)
+            {
+                neighbs.Add(grid[checkX, c.gridY]);
+            }
+        }
+        // check for y edges
+        for (int y = -1; y <= 1; y += 2)
+        {
+            int checkY = c.gridY + y;
+            if (checkY >= 0 && checkY < gridSizeY && grid[c.gridX, checkY].walkable)
+            {
+                neighbs.Add(grid[c.gridX, checkY]);
+            }
+        }
+
+        return neighbs;
+    }
+
+    /**
      * helps to visualize grid in editor
      */
     void OnDrawGizmosSelected()
@@ -64,23 +108,16 @@ public class Grid : MonoBehaviour
 
         if (grid != null)
         {
-            foreach (Node n in grid)
+            foreach (Cell c in grid)
             {
-                Gizmos.color = (n.walkable) ? Color.white : Color.red;
-                Gizmos.DrawWireCube(n.worldPosition, Vector3.one * (NODE_WIDTH - .1f));
+                Gizmos.color = (c.walkable) ? Color.white : Color.red;
+                if (CellHasDot(c))
+                {
+                    Gizmos.color = Color.green;
+                    Gizmos.DrawWireSphere(c.worldPosition, CELL_RADIUS - FORGIVENESS_TERM);
+                }
+                Gizmos.DrawWireCube(c.worldPosition, Vector3.one * (CELL_WIDTH - FORGIVENESS_TERM));
             }
         }
-    }
-}
-
-public class Node
-{
-    public bool walkable;
-    public Vector3 worldPosition;
-
-    public Node(bool _walkable, Vector3 _worldPos)
-    {
-        walkable = _walkable;
-        worldPosition = _worldPos;
     }
 }
