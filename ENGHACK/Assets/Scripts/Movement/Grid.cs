@@ -14,7 +14,7 @@ public class Grid : MonoBehaviour
     public const float CELL_RADIUS = CELL_WIDTH / 2;
     const float FORGIVENESS_TERM = 0.1f;
 
-    public Cell[,] grid;
+    private Cell[,] grid;
     int gridSizeX, gridSizeY;
     Vector3 correctedMapCenter; 
 
@@ -114,7 +114,6 @@ public class Grid : MonoBehaviour
                 if (CellHasDot(c))
                 {
                     Gizmos.color = Color.green;
-                    Gizmos.DrawWireSphere(c.worldPosition, CELL_RADIUS - FORGIVENESS_TERM);
                 }
                 Gizmos.DrawWireCube(c.worldPosition, Vector3.one * (CELL_WIDTH - FORGIVENESS_TERM));
             }

@@ -8,6 +8,8 @@ public class GhostMovement : MonoBehaviour
     GameObject pacGo;
     Transform goal;
 
+    Grid mapGrid;
+
     // Use this for initialization
     void Start()
     {
