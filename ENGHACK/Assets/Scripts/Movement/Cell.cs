@@ -11,7 +11,7 @@ public class Cell: IComparable<Cell>
     public int gridX { get; private set; }
     public int gridY { get; private set; }
 
-    private int _cost = -1;
+    private int _cost = 0;
     public int cost {
         get
         {
