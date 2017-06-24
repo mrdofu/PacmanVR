@@ -14,6 +14,30 @@ public class GhostManager : MonoBehaviour
         InitializeGhosts();
     }
 
+    void Update()
+    {
+        AddCellCosts();
+    }
+
+    /**
+     * Adds cell costs to area surrounding ghosts
+     */
+    private void AddCellCosts()
+    {
+        // reset for each AND THEN add costs for each, so that reset cost from one doesn't affect costs from others
+        foreach (var ghost in ghostObjects)
+        {
+            GhostGridInteraction ggi = ghost.GetComponent<GhostGridInteraction>();
+            ggi.resetGhostAreaCost();
+        }
+        foreach (var ghost in ghostObjects)
+        {
+            GhostGridInteraction ggi = ghost.GetComponent<GhostGridInteraction>();
+            ggi.addCellCosts();
+        }
+
+    }
+
     /** 
      * Create an instance of all ghosts
      */

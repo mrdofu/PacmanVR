@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class Grid : MonoBehaviour
 {
     [SerializeField]
-    LayerMask defaultMask;
+    LayerMask dotsMask;
     [SerializeField]
     LayerMask unwalkableMask;
     [SerializeField]
@@ -15,8 +15,8 @@ public class Grid : MonoBehaviour
     const float FORGIVENESS_TERM = 0.1f;
 
     private Cell[,] grid;
-    int gridSizeX, gridSizeY;
-    Vector3 correctedMapCenter; 
+    private int gridSizeX, gridSizeY;
+    private Vector3 correctedMapCenter; 
 
     void Start()
     {
@@ -67,7 +67,8 @@ public class Grid : MonoBehaviour
      */
      public bool CellHasDot(Cell c)
     {
-        return Physics.CheckSphere(c.worldPosition, CELL_RADIUS - FORGIVENESS_TERM, defaultMask);
+        return Physics.CheckSphere(c.worldPosition, CELL_RADIUS - FORGIVENESS_TERM, 
+            dotsMask, QueryTriggerInteraction.Collide);
     }
 
     /**
@@ -100,6 +101,21 @@ public class Grid : MonoBehaviour
     }
 
     /**
+     * Resets cell costs in a rectangle from point (x0, y0) to point (x1, y1) inclusive.
+     * @throws IndexOutOfRangeException if any point coordinate is out of range
+     */
+    public void ResetCellCosts(int x0, int y0, int x1, int y1)
+    {
+        for (int x = x0; x <= x1; x++)
+        {
+            for (int y = y0; y <= y1; y++)
+            {
+                grid[x, y].cost = 0;
+            }
+        }
+    }
+
+    /**
      * helps to visualize grid in editor
      */
     void OnDrawGizmosSelected()
@@ -111,12 +127,29 @@ public class Grid : MonoBehaviour
             foreach (Cell c in grid)
             {
                 Gizmos.color = (c.walkable) ? Color.white : Color.red;
-                if (CellHasDot(c))
+                if (c.cost > 0)
+                {
+                    Color costBlue = Color.blue;
+                    costBlue.a = (float) c.cost / 10;
+                    Gizmos.color = costBlue;
+                }
+                else if (CellHasDot(c))
                 {
                     Gizmos.color = Color.green;
                 }
                 Gizmos.DrawWireCube(c.worldPosition, Vector3.one * (CELL_WIDTH - FORGIVENESS_TERM));
             }
         }
+    }
+
+    /* GETTERS AND SETTERS */
+    public int getGridSizeX()
+    {
+        return gridSizeX;
+    }
+
+    public int getGridSizeY()
+    {
+        return gridSizeY;
     }
 }
