@@ -3,8 +3,9 @@ using System.Collections;
 
 public class PlayerMovement : MonoBehaviour {
     private static float MOVE_SPEED = 1f;
-    public float currentSpeed;
-    public GameObject mainCam;
+    private float currentSpeed;
+    [SerializeField]
+    private GameObject playerHead;
     private Rigidbody rb;
     private float[] vel = new float[3]; //[0] = x, [1] = y, [2] = z
 
@@ -19,7 +20,23 @@ public class PlayerMovement : MonoBehaviour {
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
 	}
 
-    
+    void OnEnable()
+    {
+        GameManager.OnGamePaused += GameManager_onGamePaused;
+        GameManager.OnGamePlayed += GameManager_onGamePlayed;
+    }
+
+    void GameManager_onGamePaused()
+    {
+        currentSpeed = 0;
+    }
+
+    void GameManager_onGamePlayed()
+    {
+        currentSpeed = MOVE_SPEED;
+    }
+
+    // TODO: implement press to stop
     bool requestStop()
     {
         //Press and hold to request stop
@@ -29,19 +46,9 @@ public class PlayerMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        if (gameManager.GamePaused || requestStop())
-        {
-            currentSpeed = 0;
-        }
-        else
-        {
-            currentSpeed = MOVE_SPEED;
-        }
-
-        vel[0] = mainCam.transform.forward.x * currentSpeed;
-        vel[1] = mainCam.transform.forward.y * currentSpeed;
-        vel[2] = mainCam.transform.forward.z * currentSpeed;
-        
+        vel[0] = playerHead.transform.forward.x * currentSpeed;
+        vel[1] = playerHead.transform.forward.y * currentSpeed;
+        vel[2] = playerHead.transform.forward.z * currentSpeed;
 
         rb.velocity = new Vector3(vel[0], vel[1], vel[2]);
 	}
