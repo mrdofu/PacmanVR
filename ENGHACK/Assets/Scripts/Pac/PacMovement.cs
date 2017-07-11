@@ -1,24 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class PacMovement : MonoBehaviour {
-
-    [SerializeField]
-    NavMeshAgent navAgent;
-    Transform goal;
+public class PacMovement : ComputerMovementAI {
 
     Grid mapGrid;
 
 	// Use this for initialization
-	void Start () {
+	protected override void OnStart () {
         goal = findClosestDot("");
-        navAgent.SetDestination(goal.position);
-        navAgent.Stop();
-
         mapGrid = GameObject.Find("map").GetComponent<Grid>();
     }
 
-    void Update()
+    protected override void UpdateGoal()
     {
         findPath();
     }
@@ -92,6 +85,8 @@ public class PacMovement : MonoBehaviour {
         return path;
     }
 
+    /***************** BELOW IS FOR GREEDY DOTFINDING ******************/
+
     /**
      * look for next dot to eat
      * @param eaten Name of dot that has just been eaten
@@ -100,8 +95,7 @@ public class PacMovement : MonoBehaviour {
     {
         goal = findClosestDot(eaten);
         // more accurate dot finding
-        Vector3 pos = new Vector3(goal.position.x, goal.position.y - 1, goal.position.z);
-        navAgent.SetDestination(pos);
+        goal.position = new Vector3(goal.position.x, goal.position.y - 1, goal.position.z);
     }
 
     /**
@@ -126,24 +120,5 @@ public class PacMovement : MonoBehaviour {
             }
         }
         return closest.transform;
-    }
-	
-    void OnEnable()
-    {
-        GameManager.OnGameStateChanged += GameManager_onGameStateChanged;
-    }
-
-    /*
-     * callback for gamemanager pause
-     */
-    private void GameManager_onGameStateChanged(bool isPaused)
-    {
-        if (isPaused)
-        {
-            navAgent.Stop();
-        } else
-        {
-            navAgent.Resume();
-        }
     }
 }

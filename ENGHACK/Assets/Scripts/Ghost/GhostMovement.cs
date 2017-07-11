@@ -1,45 +1,18 @@
 ﻿using UnityEngine;
 
-public class GhostMovement : MonoBehaviour
+public class GhostMovement : ComputerMovementAI
 {
-
-    [SerializeField]
-    NavMeshAgent navAgent;
     GameObject pacGo;
-    Transform goal;
 
     // Use this for initialization
-    void Start()
+    protected override void OnStart()
     {
         pacGo = GameObject.Find("PACMAN");
-        goal = pacGo.transform;
-        navAgent.SetDestination(goal.position);
-        navAgent.Stop();
     }
 
-    void Update()
+    protected override void UpdateGoal()
     {
         goal = pacGo.transform;
-        navAgent.SetDestination(goal.position);
     }
-
-    void OnEnable()
-    {
-        GameManager.OnGameStateChanged += GameManager_onGameStateChanged;
-    }
-
-    /*
-     * callback for gamemanager pause
-     */
-    private void GameManager_onGameStateChanged(bool isPaused)
-    {
-        if (isPaused)
-        {
-            navAgent.Stop();
-        }
-        else
-        {
-            navAgent.Resume();
-        }
-    }
+    
 }
