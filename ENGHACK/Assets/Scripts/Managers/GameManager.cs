@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,31 +11,35 @@ public class GameManager : MonoBehaviour
     public GameObject pacmanObj;
     public GameObject pacSpawn;
 
-    // event for game pausing/ playing
-    public delegate void GameStateChangeAction(bool isPaused);
-    public static event GameStateChangeAction OnGameStateChanged;
-
-    private bool gamePaused;
-    public bool GamePaused {
-        get { return gamePaused; }
-        set {
-            gamePaused = value;
-            if (OnGameStateChanged != null)
-            {
-                OnGameStateChanged(value);
-            }
-        }
-    }
+    // events for changing game states
+    public static event Action OnGamePaused;
+    public static event Action OnGamePlayed;
+    public static event Action OnGameReset;
 
     // all children of GameManager gameobject are dots
     void Start()
     {
-        GamePaused = true;
+        OnGamePaused();
     }
 
     void Update()
     {
 
+    }
+
+    void OnEnable()
+    {
+        PlayScaleTarget.OnPlayButtonComplete += PlayScaleTarget_OnPlayButtonComplete;
+    }
+
+    void OnDisable()
+    {
+        PlayScaleTarget.OnPlayButtonComplete -= PlayScaleTarget_OnPlayButtonComplete;
+    }
+
+    private void PlayScaleTarget_OnPlayButtonComplete()
+    {
+        OnGamePlayed();
     }
 
     /**

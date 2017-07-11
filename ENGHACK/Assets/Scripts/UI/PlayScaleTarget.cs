@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System;
 using VRStandardAssets.Utils;
 
 public class PlayScaleTarget : ScaleTarget {
@@ -25,12 +25,14 @@ public class PlayScaleTarget : ScaleTarget {
         selectionRad.OnSelectionComplete -= UnPause;
     }
 
+    public static Action OnPlayButtonComplete;
+
     /**
      * unpauses gameManager
      */
     void UnPause()
     {
-        gameManager.GamePaused = false;
+        OnPlayButtonComplete();
     }
 
     /**
