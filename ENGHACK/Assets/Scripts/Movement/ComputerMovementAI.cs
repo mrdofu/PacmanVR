@@ -32,6 +32,12 @@ public abstract class ComputerMovementAI : MonoBehaviour {
         GameManager.OnGamePlayed += GameManager_onGamePlayed;
     }
 
+    void OnDisable()
+    {
+        GameManager.OnGamePaused -= GameManager_onGamePaused;
+        GameManager.OnGamePlayed -= GameManager_onGamePlayed;
+    }
+
     /*
      * callback for gamemanager pause
      */
