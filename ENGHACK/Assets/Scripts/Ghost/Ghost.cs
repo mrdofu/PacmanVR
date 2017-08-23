@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Ghost : MonoBehaviour
 {
@@ -7,12 +8,11 @@ public class Ghost : MonoBehaviour
     public const float MAX_VULNERABLE_TIME = 10f;      // maximum time a ghost can be vulnerable for
     private float vulnerableTimer = 0f;              // timer to count how long a ghost has been vulnerable for
 
-    private GameManager gameManager;
+    public static event Action OnEatsPacman;    // event for pacman/ ghost collision where pacman loses
 
     void Start()
     {
         isVulnerable = false;
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     void Update()
@@ -33,22 +33,9 @@ public class Ghost : MonoBehaviour
                 // ghost becomes invulnerable
                 isVulnerable = false;
                 // pacman is awarded points
-            }
-            else
+            } else
             {
-                // pacman loses a life
-                Pacman pacmanScript = col.gameObject.GetComponent<Pacman>();
-                pacmanScript.numLives -= 1;
-                // if he still has lives, everybody respawns
-                if (pacmanScript.numLives > 0)
-                {
-                    gameManager.RespawnAll();
-                }
-                // else, gosts win
-                else
-                {
-                    gameManager.GameOver(GameManager.WINNER_GHOST);
-                }
+                OnEatsPacman();
             }
         }
     }

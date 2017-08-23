@@ -14,6 +14,16 @@ public class GhostManager : MonoBehaviour
         InitializeGhosts();
     }
 
+    void OnEnable()
+    {
+        GameManager.OnGameReset += RespawnGhosts;
+    }
+
+    void OnDisable()
+    {
+        GameManager.OnGameReset -= RespawnGhosts;
+    }
+
     void Update()
     {
         AddCellCosts();

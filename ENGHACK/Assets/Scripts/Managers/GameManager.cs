@@ -7,10 +7,6 @@ public class GameManager : MonoBehaviour
     public const int WINNER_PACMAN = 0;     // if pacman eats all dots before time runs out
     public const int WINNER_GHOST = 1;      // if pacman loses all lives or time runs out
     
-    public GameObject ghostManager;
-    public GameObject pacmanObj;
-    public GameObject pacSpawn;
-
     // events for changing game states
     public static event Action OnGamePaused;
     public static event Action OnGamePlayed;
@@ -30,25 +26,15 @@ public class GameManager : MonoBehaviour
     void OnEnable()
     {
         PlayScaleTarget.OnPlayButtonComplete += PlayScaleTarget_OnPlayButtonComplete;
+        Pacman.OnLoseLife += Pacman_OnLoseLife;
+        Pacman.OnLoseAllLives += Pacman_OnLoseAllLives;
     }
 
     void OnDisable()
     {
         PlayScaleTarget.OnPlayButtonComplete -= PlayScaleTarget_OnPlayButtonComplete;
-    }
-
-    private void PlayScaleTarget_OnPlayButtonComplete()
-    {
-        OnGamePlayed();
-    }
-
-    /**
-     * Called when pacman loses a life. Respawns ghosts and pacman from their spawn points
-     */
-    public void RespawnAll()
-    {
-        ghostManager.GetComponent<GhostManager>().RespawnGhosts();
-        pacmanObj.transform.position = pacSpawn.transform.position;
+        Pacman.OnLoseLife -= Pacman_OnLoseLife;
+        Pacman.OnLoseAllLives -= Pacman_OnLoseAllLives;
     }
 
     /**
@@ -72,4 +58,23 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
+    /* EVENT CALLBACKS */
+
+    private void PlayScaleTarget_OnPlayButtonComplete()
+    {
+        OnGamePlayed();
+    }
+
+    private void Pacman_OnLoseLife()
+    {
+        OnGameReset();
+    }
+
+    private void Pacman_OnLoseAllLives()
+    {
+        GameOver(WINNER_GHOST);
+    }
+
+    /* END EVENT CALLBACKS */
 }
