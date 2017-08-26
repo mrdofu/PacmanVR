@@ -10,8 +10,6 @@ public abstract class ComputerMovementAI : MonoBehaviour {
     void Start()
     {
         OnStart();
-        UpdateGoal();
-        navAgent.SetDestination(goal.position);
         navAgent.Stop();
     }
 
@@ -23,6 +21,7 @@ public abstract class ComputerMovementAI : MonoBehaviour {
 
     void Update()
     {
+        UpdateGoal();
         navAgent.SetDestination(goal.position);
     }
 
