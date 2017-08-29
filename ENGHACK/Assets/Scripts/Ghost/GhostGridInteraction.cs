@@ -10,6 +10,16 @@ public class GhostGridInteraction : MonoBehaviour {
         mapGrid = GameObject.Find("map").GetComponent<Grid>();
     }
 
+    void OnEnable()
+    {
+        GameManager.OnGameReset += GameManager_OnGameReset;
+    }
+
+    void OnDisable()
+    {
+        GameManager.OnGameReset -= GameManager_OnGameReset;
+    }
+
     /**
      * Adds cell costs to cells surrounding ghost for pacman's pathfinding
      */
@@ -56,5 +66,13 @@ public class GhostGridInteraction : MonoBehaviour {
         int x1 = Mathf.Min(ghostCell.gridX + (DANGER_RANGE + 1), mapGrid.getGridSizeX() - 1);
         int y1 = Mathf.Min(ghostCell.gridY + (DANGER_RANGE + 1), mapGrid.getGridSizeY() - 1);
         mapGrid.ResetCellCosts(x0, y0, x1, y1);
+    }
+
+    private void GameManager_OnGameReset()
+    {
+        int gridSizeX = mapGrid.getGridSizeX();
+        int gridSizeY = mapGrid.getGridSizeY();
+
+        mapGrid.ResetCellCosts(0, 0, gridSizeX - 1, gridSizeY - 1);
     }
 }
