@@ -139,6 +139,7 @@ public class Grid : MonoBehaviour
                     Gizmos.color = Color.green;
                 }
                 Gizmos.DrawWireCube(c.worldPosition, Vector3.one * (CELL_WIDTH - FORGIVENESS_TERM));
+                //Gizmos.DrawWireSphere(c.worldPosition, 1);
             }
         }
     }
