@@ -10,9 +10,9 @@ public class GhostMovement : ComputerMovementAI
         pacGo = GameObject.Find("PACMAN");
     }
 
-    protected override void UpdateGoal()
+    protected override Vector3 UpdateGoal()
     {
-        goal = pacGo.transform;
+        return pacGo.transform.position;
     }
     
 }

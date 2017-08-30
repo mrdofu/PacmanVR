@@ -5,15 +5,26 @@ public class PacMovement : ComputerMovementAI {
 
     Grid mapGrid;
 
+    private List<Cell> path;
+
 	// Use this for initialization
 	protected override void OnStart () {
-        goal = findClosestDot("");
         mapGrid = GameObject.Find("map").GetComponent<Grid>();
     }
 
-    protected override void UpdateGoal()
+    protected override Vector3 UpdateGoal()
     {
-        findPath();
+        Vector3 goal;
+        path = findPath();
+        if (path.Count > 0)
+        {
+            goal = path[0].worldPosition;
+            goal = new Vector3(goal.x, goal.y - 1, goal.z);
+        } else
+        {
+            goal = transform.position;
+        }
+        return goal;
     }
 
     /**
@@ -85,40 +96,18 @@ public class PacMovement : ComputerMovementAI {
         return path;
     }
 
-    /***************** BELOW IS FOR GREEDY DOTFINDING ******************/
-
     /**
-     * look for next dot to eat
-     * @param eaten Name of dot that has just been eaten
+     * Helps see pathfinding on grid
      */
-    public void HuntNextDot(string eaten)
+    void OnDrawGizmosSelected()
     {
-        goal = findClosestDot(eaten);
-        // more accurate dot finding
-        goal.position = new Vector3(goal.position.x, goal.position.y - 1, goal.position.z);
-    }
-
-    /**
-     * returns next closest dot transform for navigation
-     * @param eaten Name of dot that has just been eaten
-     */
-    private Transform findClosestDot(string eaten)
-    {
-        GameObject[] gos;
-        gos = GameObject.FindGameObjectsWithTag("Dot");
-        GameObject closest = null;
-        float distance = Mathf.Infinity;
-        Vector3 position = transform.position;
-        foreach (GameObject go in gos)
+        if (path != null)
         {
-            Vector3 diff = go.transform.position - position;
-            float curDistance = diff.sqrMagnitude;
-            if (curDistance < distance && !go.name.Equals(eaten))
+            foreach (Cell c in path)
             {
-                closest = go;
-                distance = curDistance;
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawWireSphere(c.worldPosition, Grid.CELL_RADIUS);
             }
         }
-        return closest.transform;
     }
 }

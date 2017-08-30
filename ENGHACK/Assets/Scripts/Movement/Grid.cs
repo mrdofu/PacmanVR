@@ -120,8 +120,9 @@ public class Grid : MonoBehaviour
      */
     void OnDrawGizmosSelected()
     {
+        // whole grid outline
         Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
-
+        // individual cells
         if (grid != null)
         {
             foreach (Cell c in grid)

@@ -4,7 +4,7 @@ public abstract class ComputerMovementAI : MonoBehaviour {
 
     [SerializeField]
     private NavMeshAgent navAgent;
-    protected Transform goal;
+    private Vector3 goal;
 
     // Use this for initialization
     void Start()
@@ -17,12 +17,12 @@ public abstract class ComputerMovementAI : MonoBehaviour {
     /**
      * must set goal to non-null
      */
-    protected abstract void UpdateGoal();
+    protected abstract Vector3 UpdateGoal();
 
     void Update()
     {
-        UpdateGoal();
-        navAgent.SetDestination(goal.position);
+        goal = UpdateGoal();
+        navAgent.SetDestination(goal);
     }
 
     void OnEnable()

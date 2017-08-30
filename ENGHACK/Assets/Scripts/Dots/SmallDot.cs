@@ -25,7 +25,6 @@ public class SmallDot : MonoBehaviour {
             }
 
             // make pacman recalculate next destination
-            pacmanGameObj.GetComponent<PacMovement>().HuntNextDot(gameObject.name);
         }
     }
 }
