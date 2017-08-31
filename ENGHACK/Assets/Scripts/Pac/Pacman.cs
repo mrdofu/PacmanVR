@@ -4,13 +4,13 @@ using UnityEngine;
 public class Pacman : MonoBehaviour {
     public const int MAX_LIVES = 3;
     private int numLives;
-    [SerializeField]
-    private GameObject pacSpawn;
 
     public static event Action OnLoseLife;
     public static event Action OnLoseAllLives;
 
-    // Use this for initialization
+    [SerializeField]
+    Transform pacSpawn;
+
     void Start()
     {
         numLives = MAX_LIVES;
@@ -18,18 +18,14 @@ public class Pacman : MonoBehaviour {
 
     void OnEnable()
     {
+        GameManager.OnGameReset += GameManager_OnGameReset;
         Ghost.OnEatsPacman += Ghost_OnEatsPacman;
     }
 
     void OnDisable()
     {
+        GameManager.OnGameReset -= GameManager_OnGameReset;
         Ghost.OnEatsPacman -= Ghost_OnEatsPacman;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     /* EVENT CALLBACKS */
@@ -48,8 +44,8 @@ public class Pacman : MonoBehaviour {
 
     private void GameManager_OnGameReset()
     {
-        transform.position = pacSpawn.transform.position;
+        // resets pacman's position
+        transform.position = pacSpawn.position;
     }
-
     /* END EVENT CALLBACKS */
 }
