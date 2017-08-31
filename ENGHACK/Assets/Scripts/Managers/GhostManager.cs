@@ -68,11 +68,6 @@ public class GhostManager : MonoBehaviour
         // keep a reference of the ghosts
         ghostObjects = GameObject.FindGameObjectsWithTag("Ghost");
     }
-    
-    public GameObject[] getGhostObjects()
-    {
-        return ghostObjects;
-    }
 
     /**
      * To be called when pacman eats a big dot. Makes ghosts vulnerable for pacman to eat
