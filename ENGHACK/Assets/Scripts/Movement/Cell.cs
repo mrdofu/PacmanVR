@@ -32,6 +32,9 @@ public class Cell: IComparable<Cell>
         gridY = _gridY;
     }
 
+    /**
+     * comparison for dijkstra heap
+     */
     public int CompareTo(Cell other)
     {
         int comp = cost - other.cost;
