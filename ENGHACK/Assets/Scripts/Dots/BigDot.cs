@@ -4,7 +4,8 @@ using System.Collections;
 public class BigDot : Dot {
     GhostManager gm;
 
-    void Start() {
+    protected override void Start() {
+        base.Start();
         gm = GameObject.Find("GhostManager").GetComponent<GhostManager>();
     }
     /**

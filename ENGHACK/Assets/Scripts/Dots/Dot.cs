@@ -4,7 +4,7 @@ using System.Collections;
 public abstract class Dot : MonoBehaviour {
     GameObject pacmanGameObj;
 
-    void Start() {
+    protected virtual void Start() {
         pacmanGameObj = GameObject.FindGameObjectWithTag("Pacman");
     }
 
