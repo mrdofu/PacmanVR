@@ -10,17 +10,12 @@ public class GameManager : MonoBehaviour
     // events for changing game states
     public static event Action OnGamePaused;
     public static event Action OnGamePlayed;
-    public static event Action OnGameReset;
+    public static event Action OnGameReset;     // soft reset (ie pacman dies)
+    public static event Action OnGameRestart;   // hard game reset (ie after game over)
 
-    // all children of GameManager gameobject are dots
     void Start()
     {
         OnGamePaused();
-    }
-
-    void Update()
-    {
-
     }
 
     void OnEnable()
@@ -61,19 +56,20 @@ public class GameManager : MonoBehaviour
 
     /* EVENT CALLBACKS */
 
-    private void PlayScaleTarget_OnPlayButtonComplete()
-    {
+    private void PlayScaleTarget_OnPlayButtonComplete() {
         OnGamePlayed();
     }
 
-    private void Pacman_OnLoseLife()
-    {
+    private void Pacman_OnLoseLife() {
         OnGameReset();
     }
 
-    private void Pacman_OnLoseAllLives()
-    {
+    private void Pacman_OnLoseAllLives() {
         GameOver(WINNER_GHOST);
+    }
+
+    public void HomeMenu_OnPointerClick() {
+        OnGameRestart();
     }
 
     /* END EVENT CALLBACKS */
