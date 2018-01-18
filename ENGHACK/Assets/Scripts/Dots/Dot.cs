@@ -8,7 +8,11 @@ public abstract class Dot : MonoBehaviour {
         pacmanGameObj = GameObject.FindGameObjectWithTag("Pacman");
     }
 
+    /**
+     * template method for behaviour after dot is eaten
+     */
     protected abstract void OnEaten();
+
     /**
       * If pacman eats a dot, points are awarded, check if there are any dots left, and the dot is destroyed
       * @param other - the other object that collided with this

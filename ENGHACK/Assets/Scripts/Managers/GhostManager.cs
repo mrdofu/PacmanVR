@@ -17,11 +17,13 @@ public class GhostManager : MonoBehaviour
     void OnEnable()
     {
         GameManager.OnGameReset += RespawnGhosts;
+        GameManager.OnGameRestart += RespawnGhosts;
     }
 
     void OnDisable()
     {
         GameManager.OnGameReset -= RespawnGhosts;
+        GameManager.OnGameRestart -= RespawnGhosts;
     }
 
     void Update()

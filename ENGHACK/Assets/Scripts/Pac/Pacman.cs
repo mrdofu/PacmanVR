@@ -19,12 +19,14 @@ public class Pacman : MonoBehaviour {
     void OnEnable()
     {
         GameManager.OnGameReset += GameManager_OnGameReset;
+        GameManager.OnGameRestart += GameManager_OnGameRestart;
         Ghost.OnEatsPacman += Ghost_OnEatsPacman;
     }
 
     void OnDisable()
     {
         GameManager.OnGameReset -= GameManager_OnGameReset;
+        GameManager.OnGameRestart -= GameManager_OnGameRestart;
         Ghost.OnEatsPacman -= Ghost_OnEatsPacman;
     }
 
@@ -42,10 +44,15 @@ public class Pacman : MonoBehaviour {
         }
     }
 
-    private void GameManager_OnGameReset()
-    {
+    private void GameManager_OnGameReset() {
         // resets pacman's position
         transform.position = pacSpawn.position;
     }
+
+    private void GameManager_OnGameRestart() {
+        transform.position = pacSpawn.position;
+        numLives = MAX_LIVES;
+    }
+
     /* END EVENT CALLBACKS */
 }
