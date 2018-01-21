@@ -15,7 +15,7 @@ public class PacMovement : ComputerMovementAI {
     protected override Vector3 UpdateGoal()
     {
         Vector3 goal;
-        path = findPath();
+        path = FindPath();
         if (path.Count > 0)
         {
             goal = path[0].worldPosition;
@@ -30,17 +30,19 @@ public class PacMovement : ComputerMovementAI {
     /**
      * calculates path from pacman's position to closest dot, avoiding ghosts
      */
-    private List<Cell> findPath()
+    private List<Cell> FindPath()
     {
         // Breadth first search, baby!
-        PriorityQueue<Cell> frontier = new PriorityQueue<Cell>();
         Cell start = mapGrid.CellFromWorldPoint(transform.position);
         start.cost = 0;
+        PriorityQueue<Cell> frontier = new PriorityQueue<Cell>();
         frontier.Add(start);
-        IDictionary<Cell, Cell> cameFrom = new Dictionary<Cell, Cell>();
-        cameFrom.Add(start, null);
-        IDictionary<Cell, int> costSoFar = new Dictionary<Cell, int>();
-        costSoFar.Add(start, 0);
+        IDictionary<Cell, Cell> cameFrom = new Dictionary<Cell, Cell> {
+            { start, null }
+        };
+        IDictionary<Cell, int> costSoFar = new Dictionary<Cell, int> {
+            { start, 0 }
+        };
 
         // find closest four dots so we don't search the entire map, but we don't make pacman run into ghosts
         int dotsToProcess = 4;
@@ -85,8 +87,9 @@ public class PacMovement : ComputerMovementAI {
     private List<Cell> ExtractPath(Cell _start, Cell _end, IDictionary<Cell, Cell> _cameFrom)
     {
         Cell current = _end;
-        List<Cell> path = new List<Cell>();
-        path.Add(current);
+        List<Cell> path = new List<Cell> {
+            current
+        };
         while (current != _start) {
             current = _cameFrom[current];
             path.Add(current);
