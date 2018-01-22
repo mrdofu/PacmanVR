@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
         PlayScaleTarget.OnPlayButtonComplete += PlayScaleTarget_OnPlayButtonComplete;
         Pacman.OnLoseLife += Pacman_OnLoseLife;
         Pacman.OnLoseAllLives += Pacman_OnLoseAllLives;
+        Dot.OnAllDotsEaten += Dot_OnAllDotsEaten;
     }
 
     void OnDisable()
@@ -30,13 +31,14 @@ public class GameManager : MonoBehaviour
         PlayScaleTarget.OnPlayButtonComplete -= PlayScaleTarget_OnPlayButtonComplete;
         Pacman.OnLoseLife -= Pacman_OnLoseLife;
         Pacman.OnLoseAllLives -= Pacman_OnLoseAllLives;
+        Dot.OnAllDotsEaten -= Dot_OnAllDotsEaten;
     }
 
     /**
      * To be called after all pacman lives are lost or after time runs out or all dots are consumed
      * @param winner 0 if pacman wins, 1 if ghosts win
      */
-    public void GameOver(int winner)
+    void GameOver(int winner)
     {
         // Determine winner based on parameter
         GameObject[] hudArray = GameObject.FindGameObjectsWithTag("HUD");
@@ -68,6 +70,11 @@ public class GameManager : MonoBehaviour
         GameOver(WINNER_GHOST);
     }
 
+    private void Dot_OnAllDotsEaten() {
+        GameOver(WINNER_PACMAN);
+    }
+
+    // needs to be public since event module on ui element calls this (not C# event)
     public void HomeMenu_OnPointerClick() {
         OnGameRestart();
     }

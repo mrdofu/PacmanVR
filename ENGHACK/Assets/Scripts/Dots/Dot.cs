@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System;
 
 public abstract class Dot : MonoBehaviour {
     GameObject pacmanGameObj;
+
+    public static event Action OnAllDotsEaten;
 
     protected virtual void Start() {
         pacmanGameObj = GameObject.FindGameObjectWithTag("Pacman");
@@ -21,13 +23,13 @@ public abstract class Dot : MonoBehaviour {
         if (other.gameObject == pacmanGameObj) {
             // TODO: award points
             Destroy(this.gameObject);
-            // TODO: check for remaining dots
+            // check for remaining dots
             Transform gameManager = transform.parent;
             if (gameManager == null) {
                 Debug.Log("Dot is not a child of GameManager");
                 return;
             } else if (gameManager.childCount <= 0) {
-                gameManager.GetComponent<GameManager>().GameOver(GameManager.WINNER_PACMAN);
+                OnAllDotsEaten();
             }
             OnEaten();
             // make pacman recalculate next destination
