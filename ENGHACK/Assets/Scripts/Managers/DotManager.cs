@@ -12,13 +12,13 @@ public class DotManager : MonoBehaviour {
      * Instantiates dot prefabs on dotspawnpoints
      */
     void SpawnDots() {
-        GameObject gameManager = GameObject.Find("GameManager");
+        GameObject dotManager = GameObject.Find("DotManager");
         // get dot spawns
         GameObject[] dotSpawnGOs = GameObject.FindGameObjectsWithTag("DotSpawn");
         // spawn appropriate dot
         foreach (var dotSpawnGO in dotSpawnGOs) {
             SpawnPoint dotSpawn = dotSpawnGO.GetComponent<SpawnPoint>();
-            dotSpawn.InstantiatePrefab(gameManager.transform);
+            dotSpawn.InstantiatePrefab(dotManager.transform);
         }
     }
 }

@@ -24,11 +24,11 @@ public abstract class Dot : MonoBehaviour {
             // TODO: award points
             Destroy(this.gameObject);
             // check for remaining dots
-            Transform gameManager = transform.parent;
-            if (gameManager == null) {
-                Debug.Log("Dot is not a child of GameManager");
+            Transform dotManager = transform.parent;
+            if (dotManager == null) {
+                Debug.Log("Dot is not a child of DotManager");
                 return;
-            } else if (gameManager.childCount <= 0) {
+            } else if (dotManager.childCount <= 0) {
                 OnAllDotsEaten();
             }
             OnEaten();
