@@ -6,41 +6,21 @@ public class PlayScaleTarget : ScaleTarget {
     [SerializeField]
     private SelectionRadial selectionRad;
 
-    private GameManager gameManager;
-    
-    protected override void Start()
-    {
-        base.Start();
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
-    }
+    public static Action OnPlayButtonComplete;
 
-	void OnEnable()
+    void OnEnable()
     {
-        selectionRad.OnSelectionComplete += UnPause;
-        selectionRad.OnSelectionComplete += Disable;
+        selectionRad.OnSelectionComplete += SelectionRadial_OnSelectionComplete;
     }
 
     void OnDisable()
     {
-        selectionRad.OnSelectionComplete -= UnPause;
+        selectionRad.OnSelectionComplete -= SelectionRadial_OnSelectionComplete;
     }
 
-    public static Action OnPlayButtonComplete;
-
-    /**
-     * unpauses gameManager
-     */
-    void UnPause()
-    {
+    /* EVENT CALLBACKS */
+    private void SelectionRadial_OnSelectionComplete() {
         OnPlayButtonComplete();
     }
-
-    /**
-     * deactivates startUI game object and fades it away
-     */
-    void Disable()
-    {
-        // TODO: dissolve animation for StartUI
-        gameObject.transform.parent.gameObject.SetActive(false);
-    }
+    /* END EVENT CALLBACKS */
 }

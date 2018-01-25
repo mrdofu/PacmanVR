@@ -7,6 +7,13 @@ public class DotManager : MonoBehaviour {
         SpawnDots();
     }
 
+    private void OnEnable() {
+        GameManager.OnGameRestart += SpawnDots;
+    }
+
+    private void OnDisable() {
+        GameManager.OnGameRestart -= SpawnDots;
+    }
 
     /**
      * Instantiates dot prefabs on dotspawnpoints

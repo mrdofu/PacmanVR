@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
         Pacman.OnLoseLife += Pacman_OnLoseLife;
         Pacman.OnLoseAllLives += Pacman_OnLoseAllLives;
         Dot.OnAllDotsEaten += Dot_OnAllDotsEaten;
+        OnGameRestart += GameManager_OnGameRestart;
     }
 
     void OnDisable()
@@ -32,6 +33,7 @@ public class GameManager : MonoBehaviour
         Pacman.OnLoseLife -= Pacman_OnLoseLife;
         Pacman.OnLoseAllLives -= Pacman_OnLoseAllLives;
         Dot.OnAllDotsEaten -= Dot_OnAllDotsEaten;
+        OnGameRestart -= GameManager_OnGameRestart;
     }
 
     /**
@@ -72,6 +74,10 @@ public class GameManager : MonoBehaviour
 
     private void Dot_OnAllDotsEaten() {
         GameOver(WINNER_PACMAN);
+    }
+
+    private void GameManager_OnGameRestart() {
+        OnGamePaused();
     }
 
     // needs to be public since event module on ui element calls this (not C# event)

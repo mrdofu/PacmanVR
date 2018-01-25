@@ -10,7 +10,6 @@ public abstract class ComputerMovementAI : MonoBehaviour {
     void Start()
     {
         OnStart();
-        navAgent.Stop();
     }
 
     protected abstract void OnStart();
