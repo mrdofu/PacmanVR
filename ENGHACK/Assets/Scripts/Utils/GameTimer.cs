@@ -10,12 +10,9 @@ public class GameTimer : MonoBehaviour {
 
     public float TimeLeft { get; private set; }
 
+    [SerializeField]
     private float timerLength;
     private bool timerActive = false;
-
-    public GameTimer(float length) {
-        timerLength = length;
-    }
 
     void Update() {
         // can be paused, in which case, don't count time

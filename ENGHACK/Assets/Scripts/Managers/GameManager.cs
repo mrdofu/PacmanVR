@@ -17,12 +17,14 @@ public class GameManager : MonoBehaviour {
     };
     public static GameState CurrentState { get; private set; }
 
-    const int MATCH_LENGTH = 3 * 60; // 3 minutes, in seconds
     private GameTimer matchTimer;
+
+    void Awake() {
+        matchTimer = gameObject.GetComponent<GameTimer>();
+    }
 
     void Start() {
         OnGamePaused();
-        matchTimer = new GameTimer(MATCH_LENGTH);
     }
 
     void OnEnable() {
@@ -93,6 +95,7 @@ public class GameManager : MonoBehaviour {
 
     private void GameManager_OnGamePlayed() {
         CurrentState = GameState.Play;
+        matchTimer.ResetTimer();
     }
 
     private void MatchTimer_OnTimerComplete() {
