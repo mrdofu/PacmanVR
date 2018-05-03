@@ -13,11 +13,12 @@ public class GameManager : MonoBehaviour {
     public static event Action OnGameRestart;   // hard game reset (ie after game over)
 
     public enum GameState {
-        Pause, Play
+        Pause, Play, Over
     };
     public static GameState CurrentState { get; private set; }
 
     private GameTimer matchTimer;
+    private GameObject[] hudArray;
 
     void Awake() {
         matchTimer = gameObject.GetComponent<GameTimer>();
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour {
 
     void Start() {
         OnGamePaused();
+        hudArray = GameObject.FindGameObjectsWithTag("HUD");
     }
 
     void OnEnable() {
@@ -49,13 +51,22 @@ public class GameManager : MonoBehaviour {
         matchTimer.OnTimerComplete -= MatchTimer_OnTimerComplete;
     }
 
+    void Update() {
+        if (CurrentState == GameState.Play) {
+            foreach (var hudObj in hudArray) {
+                Text gameStatusText = hudObj.transform.Find("gameStatusText").GetComponent<Text>();
+                gameStatusText.text = matchTimer.TimeLeft.ToString("n2");
+            }
+        }
+    }
+
     /**
      * To be called after all pacman lives are lost or after time runs out or all dots are consumed
      * @param winner 0 if pacman wins, 1 if ghosts win
      */
     void GameOver(int winner) {
+        CurrentState = GameState.Over;
         // Determine winner based on parameter
-        GameObject[] hudArray = GameObject.FindGameObjectsWithTag("HUD");
         foreach (var hudObj in hudArray) {
             Text gameStatusText = hudObj.transform.Find("gameStatusText").GetComponent<Text>();
             if (winner == 0) {
