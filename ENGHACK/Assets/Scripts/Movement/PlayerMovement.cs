@@ -52,4 +52,27 @@ public class PlayerMovement : MonoBehaviour {
 
         rb.velocity = new Vector3(vel[0], vel[1], vel[2]);
 	}
+
+    public void teleport(Vector3 targetPos) {
+        StartCoroutine(blackoutTeleport(targetPos));
+    }
+
+    /**
+     * coroutine for blackout on teleport
+     */
+    private IEnumerator blackoutTeleport(Vector3 targetPos) {
+        Blackout bo = GetComponentInChildren<Blackout>();
+        bo.TargetBlackoutValue = 1;
+        while (bo.BlackoutValue != 1) {
+            yield return 0;
+        }
+
+        transform.position = targetPos;
+
+        // black in
+        bo.TargetBlackoutValue = 0;
+        while (bo.BlackoutValue != 0) {
+            yield return 0;
+        }
+    }
 }

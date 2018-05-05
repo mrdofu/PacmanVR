@@ -89,7 +89,14 @@ public class GhostManager : MonoBehaviour
     public void RespawnGhosts() {
         for (int i = 0; i < ghostObjects.Length; i++)
         {
-            ghostObjects[i].transform.position = spawnPoints[i].transform.position;
+            GameObject ghostObj = ghostObjects[i];
+            Vector3 targetPos = spawnPoints[i].transform.position;
+            // blackout for player character
+            if (ghostObj.name.Equals("Player")) {
+                ghostObj.GetComponent<PlayerMovement>().teleport(targetPos);
+            } else {
+                ghostObj.transform.position = targetPos;
+            }
         }
     }
 }

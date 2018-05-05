@@ -1,23 +1,22 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class PlaneTeleporter : MonoBehaviour {
-    private GameObject[] ghostObjects;
-    private GameObject pacmanObject;
+    private const float map_half_width = 11f;
+
+    private IList<GameObject> characters;
     
 	// Use this for initialization
 	void Start () {
-        ghostObjects = GameObject.FindGameObjectsWithTag("Ghost");
-        pacmanObject = GameObject.FindGameObjectWithTag("Pacman");
+        characters = new List<GameObject>(GameObject.FindGameObjectsWithTag("Ghost"));
+        characters.Add(GameObject.FindGameObjectWithTag("Pacman"));
 	}
 
     // Update is called once per frame
 	void Update () {
-        foreach (var ghost in ghostObjects)
-        {
-            if (CheckOutOfMap(ghost))
-            {
-                Teleport(ghost);
+        foreach (var agent in characters) {
+            if (CheckOutOfMap(agent)) {
+                Teleport(agent);
             }
         }
 	}
@@ -28,8 +27,8 @@ public class PlaneTeleporter : MonoBehaviour {
      */
     bool CheckOutOfMap(GameObject go)
     {
-        return go.transform.position.x < -14.5f ||
-            go.transform.position.x > 14.5f;
+        return go.transform.position.x < -map_half_width ||
+            go.transform.position.x > map_half_width;
     }
 
     /**
@@ -47,7 +46,12 @@ public class PlaneTeleporter : MonoBehaviour {
             newPosition.x -= 0.5f;
         }
         newPosition.x *= -1;
-        go.transform.position = newPosition;
+
+        if (go.name.Equals("Player")) {
+            go.GetComponent<PlayerMovement>().teleport(newPosition);
+        } else {
+            go.transform.position = newPosition;
+        }
     }
 	
 
